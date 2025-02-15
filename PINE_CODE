@@ -1,0 +1,63 @@
+//@version=6
+indicator('Remove Zeros and Reverse Digits with Digit Count', overlay = true)
+
+// Function to calculate the number of digits in an integer
+f_count_digits(input_int) =>
+    input_int == 0 ? 1 : math.floor(math.log10(math.abs(input_int))) + 1
+
+// Function to remove zeros and reverse digits
+f_remove_zeros_and_reverse(input_int) =>
+    input_str = str.tostring(input_int)
+    len = str.length(input_str)
+
+    // Remove zeros
+    str_no_zeros = ''
+    i = 0
+    while i < len
+        curr_char = str.substring(input_str, i, i + 1)
+        if curr_char != '0'
+            str_no_zeros := str_no_zeros + curr_char
+            str_no_zeros
+        i := i + 1
+        i
+
+    // Reverse the string
+    len_no_zeros = str.length(str_no_zeros)
+    reversed = ''
+    j = len_no_zeros - 1
+    while j >= 0
+        reversed := reversed + str.substring(str_no_zeros, j, j + 1)
+        j := j - 1
+        j
+
+    result = str.tonumber(reversed)
+    [result]
+
+// Input and calculations
+
+input_int =math.floor(input.source(close,title = "source"))
+[result] = f_remove_zeros_and_reverse(input_int)
+
+// Calculate number of digits
+input_digits = f_count_digits(input_int)
+output_digits = f_count_digits(result)
+
+// Create and update table
+var table data_table = table.new(position.top_right, 3, 4, bgcolor = color.navy, border_width = 1)
+
+if barstate.islast
+    table.cell(data_table, 0, 0, 'Description', bgcolor = color.gray, text_color = color.white)
+    table.cell(data_table, 1, 0, 'Value', bgcolor = color.gray, text_color = color.white)
+    table.cell(data_table, 2, 0, 'Digits', bgcolor = color.gray, text_color = color.white)
+
+    table.cell(data_table, 0, 1, 'Input Number', text_color = color.white)
+    table.cell(data_table, 1, 1, str.tostring(input_int), text_color = color.white)
+    table.cell(data_table, 2, 1, str.tostring(input_digits), text_color = color.white)
+
+    table.cell(data_table, 0, 2, 'Output Number', text_color = color.white)
+    table.cell(data_table, 1, 2, 'Result'+ '→'+ str.tostring(result), text_color = color.white)
+    table.cell(data_table, 2, 2, str.tostring(output_digits), text_color = color.white)
+
+    table.cell(data_table, 0, 3, 'Description', text_color = color.white)
+    table.cell(data_table, 1, 3, 'Removes zeros and reverses digits', text_color = color.white)
+
